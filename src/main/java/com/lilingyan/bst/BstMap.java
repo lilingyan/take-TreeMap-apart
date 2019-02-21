@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * 二叉搜索树
  * @Author: lilingyan
  * @Date 2019/2/17 9:40
  */
@@ -146,6 +147,7 @@ public class BstMap<K,V> implements Iterable<BstMap.BstEntry<K,V>>{
      * @param value
      * @return
      */
+    @SuppressWarnings("Duplicates")
     public V put(K key, V value) {
         BstEntry<K,V> t = root;
         //如果根节点是空 则插入的就是根节点
@@ -225,6 +227,7 @@ public class BstMap<K,V> implements Iterable<BstMap.BstEntry<K,V>>{
      * @param key   需要查找的key
      * @return
      */
+    @SuppressWarnings("Duplicates")
     final BstEntry<K,V> getEntryUsingComparator(Object key) {
         @SuppressWarnings("unchecked")
         K k = (K) key;
@@ -256,6 +259,7 @@ public class BstMap<K,V> implements Iterable<BstMap.BstEntry<K,V>>{
      * @param key
      * @return
      */
+    @SuppressWarnings("Duplicates")
     final BstEntry<K,V> getEntry(Object key) {
         // Offload comparator-based version for sake of performance
         if (comparator != null)
@@ -412,6 +416,7 @@ public class BstMap<K,V> implements Iterable<BstMap.BstEntry<K,V>>{
      * 删除节点
      * @param p 需要删除的节点对象
      */
+    @SuppressWarnings("Duplicates")
     private void deleteEntry(BstEntry<K,V> p) {
         size--;
 
