@@ -24,13 +24,6 @@ public class AvlMap<K,V> implements Iterable<AvlMap.AvlEntry<K,V>>{
      */
     private transient int size = 0;
 
-    /**
-     * 用于记录插入时被比较过的节点
-     * 因为只有被比较过的节点，才可能有增加操作
-     * 平衡时，也只要平衡这些节点就行
-     */
-    private Stack<AvlEntry<K,V>> stack = new Stack<>();
-
     public AvlMap() {
         comparator = null;
     }
@@ -393,89 +386,6 @@ public class AvlMap<K,V> implements Iterable<AvlMap.AvlEntry<K,V>>{
         }
         return null;
     }
-
-    /**
-     * 插入后处理(插入后平衡)
-     * @param x
-     */
-//    @SuppressWarnings("Duplicates")
-//    private void fixAfterInsertion(AvlEntry<K,V> x) {
-//        //默认root，如果空栈，最后重置root不需做判断
-//        AvlEntry<K,V> p = root;
-//        while (!stack.isEmpty()){
-//            p = stack.pop();
-//            //重新计算高度(由低向上)
-//            p.height = Math.max(getHeight(p.left),getHeight(p.right))+1;
-//            //计算平衡因子
-//            int d = getHeight(p.left)-getHeight(p.right);
-//            /**
-//             * 如果平衡因子小于一
-//             * 说明此子树还是平衡的
-//             * 继续计算上层节点
-//             */
-//            if(Math.abs(d) <= 1){
-//                continue;
-//            }else{
-//                if(d == 2){
-//                    //如果是左子树过高
-//                    if(compare(x.key,p.left.key)<0){
-//                        /**
-//                         * 如果x插入在p的左节点上
-//                         * 只需向右转一次
-//                         */
-//                        p = rotateRight(p);
-//                    }else{
-//                        /**
-//                         * 如果x插入在p的左节点上
-//                         * 则需要先把p的做节点左旋
-//                         * 再把p右旋
-//                         */
-//                        p.left = rotateLeft(p.left);
-//                        p = rotateRight(p);
-//                    }
-//                }else{  //d==-2
-//                    //如果是右子树过高
-//                    /**
-//                     * 与上面的左节点过高处理逻辑一样(镜像)
-//                     */
-//                    if(compare(x.key,p.right.key)>0){
-//                        p = rotateLeft(p);
-//                    }else{
-//                        p.right = rotateRight(p.right);
-//                        p = rotateLeft(p);
-//                    }
-//                }
-//                /**
-//                 * p节点旋转完成之后
-//                 * 需要把p挂载到p的父节点上
-//                 * stack是按查询顺序压入的
-//                 * 所以当前stack顶的元素就是p的父节点
-//                 */
-//                if(!stack.isEmpty()){
-//                    /**
-//                     * 判断p是在父节点的左边还是右边
-//                     *
-//                     * 其实可以记录原p节点parent指针
-//                     * 然后和父节点左右节点做对比
-//                     * 这里直接比较大小取巧
-//                     */
-//                    if(compare(x.key,stack.peek().key)<0){
-//
-//                        stack.peek().left=p;
-//                    }else{
-//
-//                        stack.peek().right=p;
-//                    }
-//                }
-//            }
-//        }
-//        /**
-//         * stack压入的最后一个，必定是根节点(因为根节点一定是第一个被比较的)
-//         * 所以根节点可能因为不平衡而被旋转过
-//         * 所以要重置
-//         */
-//        root = p;
-//    }
 
     /**
      * 插入后处理(插入后平衡)
