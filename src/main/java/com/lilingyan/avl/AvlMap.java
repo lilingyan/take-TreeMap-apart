@@ -565,12 +565,7 @@ public class AvlMap<K,V> implements Iterable<AvlMap.AvlEntry<K,V>>{
          * 如果p有一个子节点replacement，则把p的子节点指针指向子节点replacement，子节点replacement也同时指向p(这样就清除了p的所有引用)
          */
         if (replacement != null) {
-            /**
-             * 如果删除的p节点有子节点
-             * 因为最终把子节点拉到了p节点的位置
-             * 所以直接记录子节点就行
-             */
-            ns = replacement;
+
             /**
              * p的父子节点指针互指(跳过p)
              */
@@ -588,6 +583,11 @@ public class AvlMap<K,V> implements Iterable<AvlMap.AvlEntry<K,V>>{
              * 清空p的指针(其实也没什么用)
              */
             p.left = p.right = p.parent = null;
+
+            /**
+             * 记录当前节点的父节点
+             */
+            ns = replacement.parent;
 
         } else if (p.parent == null) { // return if we are the only node.、
             /**
@@ -611,7 +611,7 @@ public class AvlMap<K,V> implements Iterable<AvlMap.AvlEntry<K,V>>{
              */
             p.parent = null;
         }
-        //平衡操作过的节点(或者父节点)
+        //平衡操作过的节点
         fixAfterDeletion(ns);
     }
 
