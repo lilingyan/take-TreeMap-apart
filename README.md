@@ -1,4 +1,5 @@
 # take-TreeMap-apart
+TreeMap是从二叉搜索树，平衡二叉树，红黑树一点点进化而来
 *****
 
 ##bst(二叉搜索树)  
