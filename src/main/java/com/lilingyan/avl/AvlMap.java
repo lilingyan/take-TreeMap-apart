@@ -615,6 +615,13 @@ public class AvlMap<K,V> implements Iterable<AvlMap.AvlEntry<K,V>>{
         fixAfterDeletion(ns);
     }
 
+    /**
+     * 获取后继节点
+     * @param t
+     * @param <K>
+     * @param <V>
+     * @return
+     */
     @SuppressWarnings("Duplicates")
     static <K,V> AvlEntry<K,V> successor(AvlEntry<K,V> t) {
         if (t == null)
