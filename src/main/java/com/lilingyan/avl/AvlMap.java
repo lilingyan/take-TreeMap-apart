@@ -338,7 +338,7 @@ public class AvlMap<K,V> implements Iterable<AvlMap.AvlEntry<K,V>>{
                  * 有三种情况
                  * 左子树平衡因子=1        当前节点x右旋
                  * 左子树平衡因子=0        当前节点x右旋
-                 * 左子树平衡因子=-1       当前节点x先左旋再右旋
+                 * 左子树平衡因子=-1       当前节点x左子节点先左旋再当前节点右旋
                  */
                 if(getHeight(x.left.left)-getHeight(x.left.right)>=0){
                     x = rotateRight(x);
