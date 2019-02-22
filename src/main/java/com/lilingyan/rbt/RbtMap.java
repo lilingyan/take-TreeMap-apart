@@ -216,117 +216,6 @@ public class RbtMap<K,V> {
     }
     //=========================删除==========================
 
-    //=========================查找==========================
-    /**
-     * 使用key查询节点对象的值
-     * @param key
-     * @return
-     */
-    public V get(Object key) {
-        RbtEntry<K,V> p = getEntry(key);
-        return (p==null ? null : p.value);
-    }
-    /**
-     * 使用key查询节点对象
-     * @param key
-     * @return
-     */
-    @SuppressWarnings("Duplicates")
-    final RbtEntry<K,V> getEntry(Object key) {
-        // Offload comparator-based version for sake of performance
-        if (comparator != null)
-            return getEntryUsingComparator(key);
-        if (key == null)
-            throw new NullPointerException();
-        //用实现了Comparable接口的key自己比较
-        @SuppressWarnings("unchecked")
-        Comparable<? super K> k = (Comparable<? super K>) key;
-        RbtEntry<K,V> p = root;
-        /**
-         * 比较逻辑与@getEntryUsingComparator()逻辑一致
-         */
-        while (p != null) {
-            int cmp = k.compareTo(p.key);
-            if (cmp < 0)
-                p = p.left;
-            else if (cmp > 0)
-                p = p.right;
-            else
-                return p;
-        }
-        return null;
-    }
-    /**
-     * 使用比较器查找
-     * @param key   需要查找的key
-     * @return
-     */
-    @SuppressWarnings("Duplicates")
-    final RbtEntry<K,V> getEntryUsingComparator(Object key) {
-        @SuppressWarnings("unchecked")
-        K k = (K) key;
-        Comparator<? super K> cpr = comparator;
-        if (cpr != null) {
-            //父节点指针
-            RbtEntry<K,V> p = root;
-            /**
-             * 递归判断 需要查询的key和父节点指针所指的key大小
-             * 如果小于 则把父节点指针向左子节点移动
-             * 如果大于 则把父节点指针向右子节点移动
-             * 如果等于 则父节点指针指向的对象就是需要查询的
-             */
-            while (p != null) {
-                int cmp = cpr.compare(k, p.key);
-                if (cmp < 0)
-                    p = p.left;
-                else if (cmp > 0)
-                    p = p.right;
-                else
-                    return p;
-            }
-        }
-        return null;
-    }
-    /**
-     * 获取后继节点
-     * @param t
-     * @param <K>
-     * @param <V>
-     * @return
-     */
-    @SuppressWarnings("Duplicates")
-    static <K,V> RbtEntry<K,V> successor(RbtEntry<K,V> t) {
-        if (t == null)
-            return null;
-        else if (t.right != null) {
-            /**
-             * 如果t节点有右子树
-             * 则直接查询右子树中最小的节点
-             * 与@getFirstEntry()方法逻辑一致
-             */
-            RbtEntry<K,V> p = t.right;
-            while (p.left != null)
-                p = p.left;
-            return p;
-        } else {
-            /**
-             * 如果没有右子树
-             * 则向上回溯
-             * 直到孩子节点是父节点的左孩子(这样父节点正好是大于t的最小节点)
-             */
-            //父节点指针
-            RbtEntry<K,V> p = t.parent;
-            //孩子节点指针
-            RbtEntry<K,V> ch = t;
-            while (p != null && ch == p.right) {
-                ch = p;
-                p = p.parent;
-            }
-            return p;
-        }
-    }
-    //=========================查找==========================
-
     //=========================插入删除后的调整==========================
     /**
      * 插入后的调整
@@ -552,6 +441,125 @@ public class RbtMap<K,V> {
     }
     //=========================左右旋转==========================
 
+    //=========================查找==========================
+    /**
+     * 使用key查询节点对象的值
+     * @param key
+     * @return
+     */
+    public V get(Object key) {
+        RbtEntry<K,V> p = getEntry(key);
+        return (p==null ? null : p.value);
+    }
+    /**
+     * 使用key查询节点对象
+     * @param key
+     * @return
+     */
+    @SuppressWarnings("Duplicates")
+    final RbtEntry<K,V> getEntry(Object key) {
+        // Offload comparator-based version for sake of performance
+        if (comparator != null)
+            return getEntryUsingComparator(key);
+        if (key == null)
+            throw new NullPointerException();
+        //用实现了Comparable接口的key自己比较
+        @SuppressWarnings("unchecked")
+        Comparable<? super K> k = (Comparable<? super K>) key;
+        RbtEntry<K,V> p = root;
+        /**
+         * 比较逻辑与@getEntryUsingComparator()逻辑一致
+         */
+        while (p != null) {
+            int cmp = k.compareTo(p.key);
+            if (cmp < 0)
+                p = p.left;
+            else if (cmp > 0)
+                p = p.right;
+            else
+                return p;
+        }
+        return null;
+    }
+    /**
+     * 使用比较器查找
+     * @param key   需要查找的key
+     * @return
+     */
+    @SuppressWarnings("Duplicates")
+    final RbtEntry<K,V> getEntryUsingComparator(Object key) {
+        @SuppressWarnings("unchecked")
+        K k = (K) key;
+        Comparator<? super K> cpr = comparator;
+        if (cpr != null) {
+            //父节点指针
+            RbtEntry<K,V> p = root;
+            /**
+             * 递归判断 需要查询的key和父节点指针所指的key大小
+             * 如果小于 则把父节点指针向左子节点移动
+             * 如果大于 则把父节点指针向右子节点移动
+             * 如果等于 则父节点指针指向的对象就是需要查询的
+             */
+            while (p != null) {
+                int cmp = cpr.compare(k, p.key);
+                if (cmp < 0)
+                    p = p.left;
+                else if (cmp > 0)
+                    p = p.right;
+                else
+                    return p;
+            }
+        }
+        return null;
+    }
+    /**
+     * 获取后继节点
+     * @param t
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    @SuppressWarnings("Duplicates")
+    static <K,V> RbtEntry<K,V> successor(RbtEntry<K,V> t) {
+        if (t == null)
+            return null;
+        else if (t.right != null) {
+            /**
+             * 如果t节点有右子树
+             * 则直接查询右子树中最小的节点
+             * 与@getFirstEntry()方法逻辑一致
+             */
+            RbtEntry<K,V> p = t.right;
+            while (p.left != null)
+                p = p.left;
+            return p;
+        } else {
+            /**
+             * 如果没有右子树
+             * 则向上回溯
+             * 直到孩子节点是父节点的左孩子(这样父节点正好是大于t的最小节点)
+             */
+            //父节点指针
+            RbtEntry<K,V> p = t.parent;
+            //孩子节点指针
+            RbtEntry<K,V> ch = t;
+            while (p != null && ch == p.right) {
+                ch = p;
+                p = p.parent;
+            }
+            return p;
+        }
+    }
+    /**
+     * 判断key是否存在
+     * @param key
+     * @return
+     */
+    public boolean containsKey(Object key) {
+        return getEntry(key) != null;
+    }
+    //=========================查找==========================
+
     /**
      * 节点类
      * @param <K>
@@ -633,15 +641,6 @@ public class RbtMap<K,V> {
                 : comparator.compare((K)k1, (K)k2);
     }
     //=========================一些常用方法封装==========================
-
-    /**
-     * 判断key是否存在
-     * @param key
-     * @return
-     */
-    public boolean containsKey(Object key) {
-        return getEntry(key) != null;
-    }
 
     public int size() {
         return this.size;
